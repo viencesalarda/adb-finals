@@ -1,4 +1,3 @@
-
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const db = require('../db');
@@ -179,13 +178,19 @@ router.get('/admin/dashboard', requireAdmin, wrap(async (req, res) => {
     );
 
     const [itemCount] = await db.query(
-        'SELECT COUNT(*) AS total FROM items'
+        `SELECT
+            COUNT(*) AS total,
+            COALESCE(SUM(type = 'lost'), 0)  AS lost,
+            COALESCE(SUM(type = 'found'), 0) AS found
+         FROM items`
     );
 
     return res.render('dashboard', {
         title: 'Admin Dashboard',
         userTotal: userCount[0].total,
         itemTotal: itemCount[0].total,
+        lostTotal: Number(itemCount[0].lost),
+        foundTotal: Number(itemCount[0].found),
         user: req.session.user
     });
 }));
