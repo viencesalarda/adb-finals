@@ -474,6 +474,7 @@ body.post-bg .form.narrow {
     margin: 0 auto;
     text-align: left;
 }
+
 @media (max-width: 700px) {
     .detail {
         grid-template-columns: 1fr;
@@ -522,15 +523,11 @@ body.post-bg .form.narrow {
 .nav .brand {
     margin-left: 110px;
 }
+
 body.dashboard-bg {
     min-height: 100vh;
     background: var(--bg);
     color: var(--fg);
-}
-.dashboard-container {
-    max-width: 1200px;
-    margin: 35px auto;
-    padding: 0 20px;
 }
 .dashboard-welcome {
     margin-bottom: 30px;
@@ -622,21 +619,11 @@ body.dashboard-bg {
     .dashboard-stats {
         grid-template-columns: 1fr;
     }
-    .dashboard-container {
-        margin: 24px auto;
-        padding: 0 16px;
-    }
     .dashboard-welcome h1 {
         font-size: 1.6rem;
     }
     .dashboard-section {
         padding: 18px;
-    }
-    .dashboard-actions {
-        flex-direction: column;
-    }
-    .dashboard-actions .btn {
-        width: 100%;
     }
 }
 .profile-menu a.btn {
@@ -646,46 +633,120 @@ body.dashboard-bg {
 .nav nav a {
     color: #ffffff;
 }
+
+:root {
+    --sidebar-w: 260px;
+    --header-h: 68px;          
+    --sidebar-bg: #1c212e;    
+}
+
 .dashboard-container {
     display: grid;
-    grid-template-columns: 240px minmax(0, 1fr);
-    column-gap: 24px;
+    grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+    column-gap: 0;
     row-gap: 0;
     align-items: start;
-    max-width: 2000px;
+    max-width: none;
+    margin: 0;
+    padding: 0;
 }
 
-/* everything goes in the right column by default */
-.dashboard-container > * {
+.dashboard-container > .dashboard-welcome,
+.dashboard-container > .dashboard-stats,
+.dashboard-container > .dashboard-section:not(#quickActions) {
     grid-column: 2;
+    margin: 24px 24px 0 24px;
+}
+.dashboard-container > .dashboard-section:not(#quickActions) {
+    margin-bottom: 24px;
 }
 
-/* the Quick Actions panel goes in the left column */
-.dashboard-container > .dashboard-section:has(.dashboard-actions) {
+.dashboard-container > #quickActions {
     grid-column: 1;
-    grid-row: 1 / span 10;
-    position: sticky;
-    top: 20px;
-    margin-bottom: 0;
+    grid-row: 1 / span 3;      
+    align-self: stretch;       
+    min-height: calc(100vh - var(--header-h));
+    margin: 0;
+    padding: 24px 20px;
+    border: none;
+    border-radius: 0;
+    background: var(--sidebar-bg);
+    display: flex;
+    flex-direction: column;
 }
 
-/* stack its buttons vertically */
-.dashboard-section:has(.dashboard-actions) .dashboard-actions {
+#quickActions h2 {
+    margin: 0 0 16px;
+    padding: 0;
+    color: #fff;
+}
+
+#quickActions .dashboard-actions {
+    display: flex;
     flex-direction: column;
+    flex-wrap: nowrap;
     align-items: stretch;
     gap: 10px;
 }
-.dashboard-section:has(.dashboard-actions) .dashboard-actions .btn {
-    width: 100%;
-}
 
-/* phones and small windows: back to one column */
+#quickActions .dashboard-actions .btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    padding: 11px 16px;
+    margin: 0;
+    border-radius: 8px;
+}
 @media (max-width: 900px) {
     .dashboard-container {
         display: block;
     }
-    .dashboard-container > .dashboard-section:has(.dashboard-actions) {
-        position: static;
-        margin-bottom: 28px;
+    .dashboard-container > #quickActions {
+        min-height: 0;
+        padding-bottom: 8px;
     }
+    .dashboard-container > .dashboard-welcome,
+    .dashboard-container > .dashboard-stats,
+    .dashboard-container > .dashboard-section:not(#quickActions) {
+        margin: 24px;
+    }
+}
+body.dashboard-bg {
+    --bg: #f3f4f6;
+    --fg: #111827;
+    --muted: #6b7280;
+    --card: #ffffff;
+    --line: #e5e7eb;
+    --sidebar-bg: #ffffff;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+body.dashboard-bg .nav {
+    background: #1c1f28;
+    border-bottom-color: transparent;
+}
+body.dashboard-bg .nav .brand,
+body.dashboard-bg .nav a {
+    color: #ffffff;
+}
+
+body.dashboard-bg #quickActions {
+    border-right: 1px solid #e5e7eb;
+}
+body.dashboard-bg #quickActions h2 {
+    color: #111827;
+}
+
+body.dashboard-bg .dashboard-stat,
+body.dashboard-bg .dashboard-section:not(#quickActions),
+body.dashboard-bg .dashboard-item {
+    background: #ffffff;
+    border-color: #e5e7eb;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+
+body.dashboard-bg .dashboard-welcome h1,
+body.dashboard-bg .dashboard-section h2 {
+    color: #111827;
 }

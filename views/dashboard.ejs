@@ -21,9 +21,54 @@
             cursor: pointer;
         }
 
+        #quickActions {
+            position: static !important;
+            top: auto !important;
+            left: auto !important;
+            transform: none !important;
+        }
+
         .dashboard-stat p {
             font-size: 1.8rem;
             font-weight: bold;
+        }
+
+        .stat-split {
+            display: flex;
+            gap: 32px;
+            margin-top: 8px;
+        }
+
+        .stat-split .stat-part span {
+            display: block;
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .stat-split .stat-part p {
+            margin: 0;
+        }
+
+        .stat-split .lost-num {
+            color: #ef4444;
+        }
+
+        .stat-split .found-num {
+            color: #22c55e;
+        }
+
+        .role-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 999px;
+            background: #1d4ed8;
+            color: #fff;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -37,14 +82,10 @@
         </a>
 
         <nav>
-            <a href="/"></a>
 
             <% if (user && (user.role === 'admin' || Number(user.is_admin) === 1)) { %>
-                <a href="/admin/dashboard"></a>
-                <a href="/admin/items"></a>
+                <span class="role-badge">ADMIN</span>
             <% } %>
-
-            <a href="/items"></a>
 
             <form action="/logout" method="POST" class="inline">
                 <button type="submit" class="btn danger">Logout</button>
@@ -71,19 +112,28 @@
                 <p><%= userTotal %></p>
             </div>
 
-            <div class="dashboard-stat lost">
+            <div class="dashboard-stat">
                 <h3>Total Items</h3>
                 <p><%= itemTotal %></p>
             </div>
 
             <div class="dashboard-stat found">
-                <h3>Account Role</h3>
-                <p style="font-size: 1.5rem;">ADMIN</p>
+                <h3>Lost &amp; Found</h3>
+                <div class="stat-split">
+                    <div class="stat-part">
+                        <span>Total Lost</span>
+                        <p class="lost-num"><%= lostTotal %></p>
+                    </div>
+                    <div class="stat-part">
+                        <span>Total Found</span>
+                        <p class="found-num"><%= foundTotal %></p>
+                    </div>
+                </div>
             </div>
 
         </section>
 
-        <section class="dashboard-section">
+        <section class="dashboard-section" id="quickActions">
             <h2>Quick Actions</h2>
 
             <div class="dashboard-actions">

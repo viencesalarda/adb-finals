@@ -38,14 +38,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// Existing routes
 app.use('/', require('./routes/auth'));
 app.use('/', require('./routes/items'));
 
-// Admin Items CRUD
 app.use('/admin/items', require('./routes/admin-items'));
 
-// 404 handler
 app.use((req, res) => {
     res.status(404).render('error', {
         title: 'Not found',
@@ -53,7 +50,6 @@ app.use((req, res) => {
     });
 });
 
-// Error handler
 app.use((err, req, res, next) => {
     console.error('ERROR:', err);
 
