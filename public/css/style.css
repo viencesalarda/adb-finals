@@ -750,3 +750,13 @@ body.dashboard-bg .dashboard-welcome h1,
 body.dashboard-bg .dashboard-section h2 {
     color: #111827;
 }
+#quickActions .dashboard-actions .btn,
+#quickActions .dashboard-actions .btn.secondary,
+#quickActions .dashboard-actions .btn.found-btn {
+    background: #111111;
+    color: #ffffff;
+}
+#quickActions .dashboard-actions .btn:hover {
+    background: #2b2b2b;
+    filter: none;
+}
