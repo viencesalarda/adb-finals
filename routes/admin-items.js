@@ -25,7 +25,6 @@ function requireAdmin(req, res, next) {
 
 router.use(requireLogin, requireAdmin);
 
-// READ - Display all reports
 router.get('/', async (req, res) => {
     try {
         const [items] = await db.query(
@@ -42,14 +41,12 @@ router.get('/', async (req, res) => {
     }
 });
 
-// CREATE - Display form
 router.get('/new', (req, res) => {
     res.render('admin/item-new', {
         user: req.session.user
     });
 });
 
-// CREATE - Save new report
 router.post('/new', async (req, res) => {
     try {
         const {
@@ -103,7 +100,6 @@ router.post('/new', async (req, res) => {
     }
 });
 
-// UPDATE - Display edit form
 router.get('/:id/edit', async (req, res) => {
     try {
         const [results] = await db.query(
@@ -125,7 +121,6 @@ router.get('/:id/edit', async (req, res) => {
     }
 });
 
-// UPDATE - Save edited report
 router.post('/:id/edit', async (req, res) => {
     try {
         const {
@@ -184,7 +179,6 @@ router.post('/:id/edit', async (req, res) => {
     }
 });
 
-// DELETE - Delete report
 router.post('/:id/delete', async (req, res) => {
     try {
         const [result] = await db.query(

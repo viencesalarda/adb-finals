@@ -678,7 +678,7 @@ body.dashboard-bg {
 #quickActions h2 {
     margin: 0 0 16px;
     padding: 0;
-    color: #fff;
+    color: #ffffff;
 }
 
 #quickActions .dashboard-actions {
@@ -712,13 +712,13 @@ body.dashboard-bg {
     }
 }
 body.dashboard-bg {
-    --bg: #f3f4f6;
+    --bg: #f3f6f4b2;
     --fg: #111827;
     --muted: #6b7280;
     --card: #ffffff;
     --line: #e5e7eb;
     --sidebar-bg: #ffffff;
-    background: #f3f4f6;
+    background: #f3f6f3;
     color: #111827;
 }
 
@@ -732,7 +732,7 @@ body.dashboard-bg .nav a {
 }
 
 body.dashboard-bg #quickActions {
-    border-right: 1px solid #e5e7eb;
+    border-right: 1px solid #e5ebe6;
 }
 body.dashboard-bg #quickActions h2 {
     color: #111827;
@@ -742,13 +742,13 @@ body.dashboard-bg .dashboard-stat,
 body.dashboard-bg .dashboard-section:not(#quickActions),
 body.dashboard-bg .dashboard-item {
     background: #ffffff;
-    border-color: #e5e7eb;
+    border-color: #10d13a;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
 body.dashboard-bg .dashboard-welcome h1,
 body.dashboard-bg .dashboard-section h2 {
-    color: #111827;
+    color: #112716;
 }
 #quickActions .dashboard-actions .btn,
 #quickActions .dashboard-actions .btn.secondary,
@@ -759,4 +759,21 @@ body.dashboard-bg .dashboard-section h2 {
 #quickActions .dashboard-actions .btn:hover {
     background: #2b2b2b;
     filter: none;
+}
+body.dashboard-bg {
+    --sidebar-bg: #16834a;
+}
+body.dashboard-bg #quickActions {
+    background: #16834a;
+    border-right: none;
+}
+body.dashboard-bg #quickActions h2 {
+    color: #ffffff;
+}
+body.dashboard-bg h1,
+body.dashboard-bg h1 + p,
+body.dashboard-bg main > p,
+body.dashboard-bg .muted {
+    color: #111111 !important;
+    text-shadow: none;
 }
