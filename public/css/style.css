@@ -87,6 +87,7 @@ button.link {
 }
 .btn:hover {
     filter: brightness(0.9);
+    transform: translateY(1px);
 }
 .btn.danger {
     background: #dc2626;
@@ -231,7 +232,7 @@ body.home-bg .footer {
     color: #ffffff;
 }
 body.home-bg .nav {
-    background: rgb(28, 31, 40);
+    background: rgba(0,0,0,.6);
     border-bottom-color: transparent;
 }
 body.home-bg .nav a,
@@ -495,6 +496,8 @@ body.post-bg .form.narrow {
     min-height: 60px;
     display: flex;
     align-items: center;
+    background: rgba(0, 0, 0, .6);
+    border-bottom-color: transparent;
 }
 .nav .brand {
     position: relative;
@@ -753,12 +756,13 @@ body.dashboard-bg .dashboard-section h2 {
 #quickActions .dashboard-actions .btn,
 #quickActions .dashboard-actions .btn.secondary,
 #quickActions .dashboard-actions .btn.found-btn {
-    background: #111111;
-    color: #ffffff;
+    background: #ffffff;
+    color: #000000;
 }
 #quickActions .dashboard-actions .btn:hover {
-    background: #2b2b2b;
+    background: #dbdbdb;
     filter: none;
+    transform: translateY(2px);
 }
 body.dashboard-bg {
     --sidebar-bg: #16834a;
@@ -768,7 +772,7 @@ body.dashboard-bg #quickActions {
     border-right: none;
 }
 body.dashboard-bg #quickActions h2 {
-    color: #ffffff;
+    color: #000000;
 }
 body.dashboard-bg h1,
 body.dashboard-bg h1 + p,
