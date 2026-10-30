@@ -45,6 +45,11 @@ const upload = multer({
     }
 });
 
+function isAdminUser(user) {
+    return !!user && (user.role === 'admin' || Number(user.is_admin) === 1);
+}
+
+// HOME PAGE / SEARCH
 router.get('/', wrap(async (req, res) => {
     const {
         q = '',
@@ -84,11 +89,11 @@ router.get('/', wrap(async (req, res) => {
 
     const [items] = await db.query(
         `SELECT i.*, u.name AS poster
-         FROM items i
-         LEFT JOIN users u ON u.id = i.user_id
-         ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
-         ORDER BY i.created_at DESC, i.id DESC
-         LIMIT 100`,
+        FROM items i
+        LEFT JOIN users u ON u.id = i.user_id
+        ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
+        ORDER BY i.created_at DESC, i.id DESC
+        LIMIT 100`,
         args
     );
 
@@ -101,6 +106,7 @@ router.get('/', wrap(async (req, res) => {
     });
 }));
 
+// VIEW ALL ITEMS BUTTON FIX
 router.get('/items', (req, res) => {
     const queryIndex = req.originalUrl.indexOf('?');
     const query = queryIndex !== -1
@@ -112,8 +118,18 @@ router.get('/items', (req, res) => {
 
 // MY REPORTS
 router.get('/my-items', requireLogin, wrap(async (req, res) => {
-  const [items] = await db.query('SELECT * FROM items WHERE user_id = ? ORDER BY created_at DESC, id DESC', [req.session.user.id]);
-  res.render('items/mine', { title: 'My reports', items, bodyClass: 'mine-bg' });
+    const [items] = await db.query(
+        `SELECT *
+        FROM items
+        WHERE user_id = ?
+        ORDER BY created_at DESC, id DESC`,
+        [req.session.user.id]
+    );
+
+    res.render('items/mine', {
+        title: 'My reports',
+        items
+    });
 }));
 
 // NEW ITEM FORM
@@ -168,9 +184,9 @@ router.post('/items', requireLogin, (req, res, next) => {
 
             const [result] = await db.query(
                 `INSERT INTO items
-                 (user_id, type, title, description, category, location,
-                  date_lost_found, image)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                (user_id, type, title, description, category, location,
+                date_lost_found, image)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
                 [
                     req.session.user.id,
                     type,
@@ -188,6 +204,11 @@ router.post('/items', requireLogin, (req, res, next) => {
                 text: 'Report posted.'
             };
 
+            // Admin: balik sa admin reports. User: pakadto sa item page.
+            if (isAdminUser(req.session.user)) {
+                return res.redirect('/admin/items');
+            }
+
             res.redirect('/items/' + result.insertId);
         } catch (e) {
             if (req.file) {
@@ -203,9 +224,9 @@ router.post('/items', requireLogin, (req, res, next) => {
 router.get('/items/:id', wrap(async (req, res, next) => {
     const [rows] = await db.query(
         `SELECT i.*, u.name AS poster
-         FROM items i
-         LEFT JOIN users u ON u.id = i.user_id
-         WHERE i.id = ?`,
+        FROM items i
+        LEFT JOIN users u ON u.id = i.user_id
+        WHERE i.id = ?`,
         [req.params.id]
     );
 
@@ -223,10 +244,10 @@ router.get('/items/:id', wrap(async (req, res, next) => {
     if (isOwner) {
         [messages] = await db.query(
             `SELECT m.*, u.name AS sender, u.email AS sender_email
-             FROM messages m
-             JOIN users u ON u.id = m.sender_id
-             WHERE m.item_id = ?
-             ORDER BY m.created_at DESC, m.id DESC`,
+            FROM messages m
+            JOIN users u ON u.id = m.sender_id
+            WHERE m.item_id = ?
+            ORDER BY m.created_at DESC, m.id DESC`,
             [item.id]
         );
     }
@@ -310,10 +331,10 @@ router.post(
 
                 await db.query(
                     `UPDATE items
-                     SET type = ?, title = ?, description = ?,
-                         category = ?, location = ?,
-                         date_lost_found = ?, status = ?, image = ?
-                     WHERE id = ? AND user_id = ?`,
+                    SET type = ?, title = ?, description = ?,
+                        category = ?, location = ?,
+                        date_lost_found = ?, status = ?, image = ?
+                    WHERE id = ? AND user_id = ?`,
                     [
                         type,
                         title.trim(),
@@ -381,8 +402,8 @@ router.post('/items/:id/contact', requireLogin, wrap(async (req, res, next) => {
 
     await db.query(
         `INSERT INTO messages
-         (item_id, sender_id, receiver_id, message)
-         VALUES (?, ?, ?, ?)`,
+        (item_id, sender_id, receiver_id, message)
+        VALUES (?, ?, ?, ?)`,
         [
             item.id,
             req.session.user.id,
@@ -403,8 +424,8 @@ router.post('/items/:id/contact', requireLogin, wrap(async (req, res, next) => {
 router.post('/items/:id/return', requireLogin, wrap(async (req, res) => {
     const [result] = await db.query(
         `UPDATE items
-         SET status = 'returned'
-         WHERE id = ? AND user_id = ?`,
+        SET status = 'returned'
+        WHERE id = ? AND user_id = ?`,
         [req.params.id, req.session.user.id]
     );
 
@@ -419,8 +440,8 @@ router.post('/items/:id/return', requireLogin, wrap(async (req, res) => {
 router.post('/items/:id/delete', requireLogin, wrap(async (req, res) => {
     const [rows] = await db.query(
         `SELECT *
-         FROM items
-         WHERE id = ? AND user_id = ?`,
+        FROM items
+        WHERE id = ? AND user_id = ?`,
         [req.params.id, req.session.user.id]
     );
 

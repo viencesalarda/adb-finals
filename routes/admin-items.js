@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
@@ -25,6 +24,7 @@ function requireAdmin(req, res, next) {
 
 router.use(requireLogin, requireAdmin);
 
+// READ - Display all reports
 router.get('/', async (req, res) => {
     try {
         const [items] = await db.query(
@@ -41,65 +41,12 @@ router.get('/', async (req, res) => {
     }
 });
 
+// CREATE - Gamita ang existing nga "Post an item" page
 router.get('/new', (req, res) => {
-    res.render('admin/item-new', {
-        user: req.session.user
-    });
+    res.redirect('/items/new');
 });
 
-router.post('/new', async (req, res) => {
-    try {
-        const {
-            type,
-            title,
-            description,
-            category,
-            location,
-            date_lost_found,
-            status
-        } = req.body;
-
-        if (
-            !['lost', 'found'].includes(type) ||
-            !title ||
-            !title.trim() ||
-            !category ||
-            !location ||
-            !location.trim() ||
-            !date_lost_found
-        ) {
-            return res.status(400).send(
-                'Please complete all required fields.'
-            );
-        }
-
-        const sql = `
-            INSERT INTO items
-            (user_id, type, title, description, category,
-             location, date_lost_found, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `;
-
-        const values = [
-            req.session.user.id,
-            type,
-            title.trim(),
-            description || '',
-            category,
-            location.trim(),
-            date_lost_found,
-            status || 'open'
-        ];
-
-        await db.query(sql, values);
-
-        res.redirect('/admin/items');
-    } catch (err) {
-        console.error('Failed to create report:', err);
-        res.status(500).send('Failed to create report.');
-    }
-});
-
+// UPDATE - Display edit form
 router.get('/:id/edit', async (req, res) => {
     try {
         const [results] = await db.query(
@@ -121,6 +68,7 @@ router.get('/:id/edit', async (req, res) => {
     }
 });
 
+// UPDATE - Save edited report
 router.post('/:id/edit', async (req, res) => {
     try {
         const {
@@ -179,6 +127,7 @@ router.post('/:id/edit', async (req, res) => {
     }
 });
 
+// DELETE - Delete report
 router.post('/:id/delete', async (req, res) => {
     try {
         const [result] = await db.query(
