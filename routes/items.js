@@ -106,7 +106,6 @@ router.get('/', wrap(async (req, res) => {
     });
 }));
 
-// VIEW ALL ITEMS BUTTON FIX
 router.get('/items', (req, res) => {
     const queryIndex = req.originalUrl.indexOf('?');
     const query = queryIndex !== -1
@@ -116,7 +115,6 @@ router.get('/items', (req, res) => {
     res.redirect('/' + query);
 });
 
-// MY REPORTS
 router.get('/my-items', requireLogin, wrap(async (req, res) => {
     const [items] = await db.query(
         `SELECT *
@@ -132,7 +130,6 @@ router.get('/my-items', requireLogin, wrap(async (req, res) => {
     });
 }));
 
-// NEW ITEM FORM
 router.get('/items/new', requireLogin, (req, res) => {
     res.render('items/new', {
         title: 'Post an item',
@@ -142,7 +139,6 @@ router.get('/items/new', requireLogin, (req, res) => {
     });
 });
 
-// CREATE ITEM
 router.post('/items', requireLogin, (req, res, next) => {
     upload.single('photo')(req, res, async (err) => {
         try {
@@ -204,7 +200,6 @@ router.post('/items', requireLogin, (req, res, next) => {
                 text: 'Report posted.'
             };
 
-            // Admin: balik sa admin reports. User: pakadto sa item page.
             if (isAdminUser(req.session.user)) {
                 return res.redirect('/admin/items');
             }
@@ -220,7 +215,6 @@ router.post('/items', requireLogin, (req, res, next) => {
     });
 });
 
-// VIEW ITEM
 router.get('/items/:id', wrap(async (req, res, next) => {
     const [rows] = await db.query(
         `SELECT i.*, u.name AS poster
@@ -260,7 +254,6 @@ router.get('/items/:id', wrap(async (req, res, next) => {
     });
 }));
 
-// UPDATE ITEM
 router.post(
     '/items/:id/update',
     requireLogin,
@@ -373,7 +366,6 @@ router.post(
     }
 );
 
-// CONTACT ITEM OWNER
 router.post('/items/:id/contact', requireLogin, wrap(async (req, res, next) => {
     const [rows] = await db.query(
         'SELECT * FROM items WHERE id = ?',
@@ -420,7 +412,6 @@ router.post('/items/:id/contact', requireLogin, wrap(async (req, res, next) => {
     res.redirect('/items/' + item.id);
 }));
 
-// MARK ITEM AS RETURNED
 router.post('/items/:id/return', requireLogin, wrap(async (req, res) => {
     const [result] = await db.query(
         `UPDATE items
@@ -436,7 +427,6 @@ router.post('/items/:id/return', requireLogin, wrap(async (req, res) => {
     res.redirect('/items/' + req.params.id);
 }));
 
-// DELETE ITEM
 router.post('/items/:id/delete', requireLogin, wrap(async (req, res) => {
     const [rows] = await db.query(
         `SELECT *

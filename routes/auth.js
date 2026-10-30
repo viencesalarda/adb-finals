@@ -8,7 +8,6 @@ const router = express.Router();
 const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
 const COURSES = ['BSCRIM', 'BSIT', 'BSTM', 'BSHM', 'BSME', 'BSED'];
 
-// ADMIN MIDDLEWARE
 const requireAdmin = wrap(async (req, res, next) => {
     if (!req.session.user) {
         return res.redirect('/login');
@@ -32,7 +31,6 @@ const requireAdmin = wrap(async (req, res, next) => {
     next();
 });
 
-// REGISTER PAGE
 router.get('/register', requireGuest, (req, res) => {
     res.render('auth/register', {
         title: 'Register',
@@ -40,7 +38,6 @@ router.get('/register', requireGuest, (req, res) => {
     });
 });
 
-// REGISTER ACCOUNT
 router.post('/register', requireGuest, wrap(async (req, res) => {
     const { name, email, password, year_level, course } = req.body;
 
@@ -115,7 +112,6 @@ router.post('/register', requireGuest, wrap(async (req, res) => {
     return res.redirect('/login');
 }));
 
-// LOGIN PAGE
 router.get('/login', requireGuest, (req, res) => {
     res.render('auth/login', {
         title: 'Log in',
@@ -123,7 +119,6 @@ router.get('/login', requireGuest, (req, res) => {
     });
 });
 
-// LOGIN ACCOUNT
 router.post('/login', requireGuest, wrap(async (req, res) => {
     const { email, password } = req.body;
 
@@ -171,7 +166,6 @@ router.post('/login', requireGuest, wrap(async (req, res) => {
     });
 }));
 
-// ADMIN DASHBOARD
 router.get('/admin/dashboard', requireAdmin, wrap(async (req, res) => {
     const [userCount] = await db.query(
         'SELECT COUNT(*) AS total FROM users'
@@ -195,7 +189,6 @@ router.get('/admin/dashboard', requireAdmin, wrap(async (req, res) => {
     });
 }));
 
-// VIEW AND SEARCH ACCOUNTS
 router.get('/admin/accounts', requireAdmin, wrap(async (req, res) => {
     const search = (req.query.search || '').trim();
 
@@ -214,7 +207,6 @@ router.get('/admin/accounts', requireAdmin, wrap(async (req, res) => {
     });
 }));
 
-// ADD ACCOUNT PAGE
 router.get('/admin/accounts/add', requireAdmin, (req, res) => {
     return res.render('admin/add-account', {
         title: 'Add Account',
@@ -223,7 +215,6 @@ router.get('/admin/accounts/add', requireAdmin, (req, res) => {
     });
 });
 
-// CREATE ACCOUNT
 router.post('/admin/accounts/add', requireAdmin, wrap(async (req, res) => {
     const { name, email, password, course, year_level, role } = req.body;
 
@@ -276,7 +267,6 @@ router.post('/admin/accounts/add', requireAdmin, wrap(async (req, res) => {
     return res.redirect('/admin/accounts');
 }));
 
-// EDIT ACCOUNT PAGE
 router.get('/admin/accounts/edit/:id', requireAdmin, wrap(async (req, res) => {
     const [rows] = await db.query(
         `SELECT id, name, email, course, year_level, role, is_admin
@@ -297,7 +287,6 @@ router.get('/admin/accounts/edit/:id', requireAdmin, wrap(async (req, res) => {
     });
 }));
 
-// UPDATE ACCOUNT
 router.post('/admin/accounts/edit/:id', requireAdmin, wrap(async (req, res) => {
     const { name, email, course, year_level, role } = req.body;
     const mail = (email || '').toLowerCase().trim();
@@ -374,7 +363,6 @@ router.post('/admin/accounts/edit/:id', requireAdmin, wrap(async (req, res) => {
     return res.redirect('/admin/accounts');
 }));
 
-// DELETE ACCOUNT
 router.post('/admin/accounts/delete/:id', requireAdmin, wrap(async (req, res) => {
     const accountId = Number(req.params.id);
 
@@ -412,13 +400,11 @@ router.post('/admin/accounts/delete/:id', requireAdmin, wrap(async (req, res) =>
             return res.redirect('/admin/accounts');
         }
 
-        // DELETE MESSAGES SENT OR RECEIVED BY THE ACCOUNT
         await connection.query(
             'DELETE FROM messages WHERE sender_id = ? OR receiver_id = ?',
             [accountId, accountId]
         );
 
-        // DELETE MESSAGES CONNECTED TO THE ACCOUNT'S ITEMS
         await connection.query(
             `DELETE FROM messages
              WHERE item_id IN (
@@ -429,13 +415,11 @@ router.post('/admin/accounts/delete/:id', requireAdmin, wrap(async (req, res) =>
             [accountId]
         );
 
-        // DELETE ITEMS OWNED BY THE ACCOUNT
         await connection.query(
             'DELETE FROM items WHERE user_id = ?',
             [accountId]
         );
 
-        // DELETE ACCOUNT
         await connection.query(
             'DELETE FROM users WHERE id = ?',
             [accountId]
@@ -467,7 +451,6 @@ router.post('/admin/accounts/delete/:id', requireAdmin, wrap(async (req, res) =>
     }
 }));
 
-// LOGOUT
 router.post('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {

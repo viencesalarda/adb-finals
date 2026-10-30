@@ -96,18 +96,42 @@
         .reports-table td {
             background: #ffffff;
             color: #111111;
-}
+        }
 
-        .reports-table tbody tr:nth-child(even) td {
-            background: #ffffff;
+        .reports-table tbody tr {
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .reports-table tbody tr td {
+            transition: background-color 0.2s ease;
         }
 
         .reports-table tbody tr:hover td {
-            background: #ffffff;
-            transform: translateY(5px);
+            background: #f0fdf4;
+        }
+
+        .reports-table tbody tr:hover {
+            box-shadow: inset 4px 0 0 #16a34a;
+        }
+
+        .report-actions .btn {
+            transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .report-actions .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .report-image {
+            transition: transform 0.2s ease;
+        }
+
+        .report-image:hover {
+            transform: scale(1.08);
         }
         .reports-table strong {
-            color: #ffffff;
+            color: #000000;
         }
 
         .report-image {
@@ -329,7 +353,6 @@
 
             <h2>All Reports</h2>
 
-            <!-- Search Reports -->
             <div class="reports-search">
                 <input
                     type="text"

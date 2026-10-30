@@ -87,7 +87,7 @@ button.link {
 }
 .btn:hover {
     filter: brightness(0.9);
-    transform: translateY(1px);
+    transform: translateY(-2px);
 }
 .btn.danger {
     background: #dc2626;
@@ -762,14 +762,14 @@ body.dashboard-bg .dashboard-section h2 {
 #quickActions .dashboard-actions .btn:hover {
     background: #dbdbdb;
     filter: none;
-    transform: translateY(2px);
+    transform: translateY(-2px);
 }
 body.dashboard-bg {
     --sidebar-bg: #16834a;
 }
 body.dashboard-bg #quickActions {
     background: #16834a;
-    border-right: none;
+    border-right: 60px solid #f5f3f3;
 }
 body.dashboard-bg #quickActions h2 {
     color: #000000;
@@ -780,4 +780,33 @@ body.dashboard-bg main > p,
 body.dashboard-bg .muted {
     color: #111111 !important;
     text-shadow: none;
+}
+.grid .card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    will-change: transform;
+}
+
+.grid .card:hover {
+    transform: translateY(-8px) scale(1.04);
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45);
+    position: relative;
+    z-index: 2;
+}
+
+.grid .card img {
+    transition: transform 0.35s ease;
+}
+.grid .card:hover img {
+    transform: scale(1.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .grid .card,
+    .grid .card img {
+        transition: none;
+    }
+    .grid .card:hover,
+    .grid .card:hover img {
+        transform: none;
+    }
 }
